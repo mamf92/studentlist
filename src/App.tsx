@@ -5,9 +5,9 @@ function App() {
     <>
       <section>
         <div>
-          <h1 className='text-amber-400 text-5xl'>Elevsøk</h1>
+          <h1 className="text-amber-400 text-5xl">Elevsøk</h1>
         </div>
-      </section>      
+      </section>
     </>
   )
 }
