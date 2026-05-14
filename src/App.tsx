@@ -1,11 +1,11 @@
-import StudentSearch from './pages/StudentSearch'
+import StudentSearchPage from './pages/StudentSearchPage'
 
 function App() {
   return (
     <>
       <section>
-        <div className="bg-background">
-          <StudentSearch />
+        <div className="bg-background flex min-h-screen w-full">
+          <StudentSearchPage />
         </div>
       </section>
     </>
