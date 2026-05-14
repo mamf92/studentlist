@@ -9,7 +9,7 @@ import Add from '../assets/icons/add.svg?react'
 import Search from '../assets/icons/search.svg?react'
 
 export type Student = {
-  id?: string
+  id: string
   first_name: string
   last_name: string
   phone: string
@@ -70,12 +70,39 @@ function StudentSearchPage() {
     setSelectedStudent(student)
     setShowStudentDetails(true)
   }
-  const handleAddStudent = (student: Student) => {
+  const handleEditStudentClick = (student: Student) => {
+    setSelectedStudent(student)
+    setShowStudentDetails(false)
+    setShowForm(true)
+  }
+  const handleSubmitStudent = (student: Student) => {
+    if (student.id !== '') {
+      handleEditStudent(student)
+      return
+    }
     const newStudent = { ...student, id: uuidv4() }
     const updatedStudents = [...students, newStudent]
     setStudents(updatedStudents)
     handleUpdateLocalStorage(updatedStudents)
     setShowForm(false)
+  }
+
+  const handleDeleteStudent = (studentId: string) => {
+    const updatedStudents = students.filter(
+      (student) => student.id !== studentId
+    )
+    setStudents(updatedStudents)
+    handleUpdateLocalStorage(updatedStudents)
+    setShowStudentDetails(false)
+    setSelectedStudent(null)
+  }
+
+  const handleEditStudent = (updatedStudent: Student) => {
+    const updatedStudents = students.map((student) =>
+      student.id === updatedStudent.id ? updatedStudent : student
+    )
+    setStudents(updatedStudents)
+    handleUpdateLocalStorage(updatedStudents)
   }
 
   const handleResetApplication = () => {
@@ -157,7 +184,10 @@ function StudentSearchPage() {
       <div className="flex flex-col gap-4 rounded-3xl bg-white px-2 py-6 sm:rounded-lg sm:px-6">
         <button
           className="flex items-center self-end rounded-full border border-black bg-white px-3 py-2 text-sm font-medium text-black transition hover:cursor-pointer hover:bg-black hover:text-white"
-          onClick={() => setShowForm(true)}
+          onClick={() => {
+            setSelectedStudent(null)
+            setShowForm(true)
+          }}
         >
           Legg til elev
           <Add className="ml-1 inline h-3 w-3" />
@@ -251,14 +281,23 @@ function StudentSearchPage() {
       </div>
       {showForm && (
         <StudentForm
-          onSubmitStudent={handleAddStudent}
-          onClose={() => setShowForm(false)}
+          student={selectedStudent || undefined}
+          onSubmitStudent={handleSubmitStudent}
+          onClose={() => {
+            setShowForm(false)
+            setSelectedStudent(null)
+          }}
         />
       )}
       {showStudentDetails && selectedStudent && (
         <StudentDetails
           student={selectedStudent}
-          onClose={() => setShowStudentDetails(false)}
+          onDeleteStudent={handleDeleteStudent}
+          onEditStudentClick={handleEditStudentClick}
+          onClose={() => {
+            setShowStudentDetails(false)
+            setSelectedStudent(null)
+          }}
         />
       )}
     </div>
