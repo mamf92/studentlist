@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 import studentsData from '../assets/output.json'
 import StudentForm from '../components/StudentForm'
 import StudentDetails from '../components/StudentDetails'
@@ -34,8 +35,18 @@ function StudentSearchPage() {
     async function loadStudents() {
       try {
         await new Promise((resolve) => setTimeout(resolve, 1000))
-
-        setStudents(studentsData as Student[])
+        const savedStudents = localStorage.getItem('students')
+        if (savedStudents) {
+          setStudents(JSON.parse(savedStudents))
+        } else {
+          const studentsWithIds = (studentsData as Student[]).map(
+            (student) => ({
+              ...student,
+              id: uuidv4(),
+            })
+          )
+          setStudents(studentsWithIds)
+        }
       } finally {
         setLoading(false)
       }
@@ -60,9 +71,20 @@ function StudentSearchPage() {
     setShowStudentDetails(true)
   }
   const handleAddStudent = (student: Student) => {
-    const newStudent = { ...student, id: (students.length + 1).toString() }
-    setStudents((prev) => [...prev, newStudent])
+    const newStudent = { ...student, id: uuidv4() }
+    const updatedStudents = [...students, newStudent]
+    setStudents(updatedStudents)
+    handleUpdateLocalStorage(updatedStudents)
     setShowForm(false)
+  }
+
+  const handleResetApplication = () => {
+    localStorage.removeItem('students')
+    location.reload()
+  }
+
+  const handleUpdateLocalStorage = (updatedStudents: Student[]) => {
+    localStorage.setItem('students', JSON.stringify(updatedStudents))
   }
 
   const filteredStudents = students.filter((student) => {
@@ -111,6 +133,14 @@ function StudentSearchPage() {
 
   return (
     <div className="mx-auto mb-4 flex w-full max-w-150 flex-col gap-5 md:max-w-200">
+      <div className="absolute top-4 right-4">
+        <button
+          className="rounded-full border border-black bg-white px-3 py-2 text-sm font-medium text-black transition hover:cursor-pointer hover:bg-black hover:text-white"
+          onClick={handleResetApplication}
+        >
+          Tilbakestill applikasjon
+        </button>
+      </div>
       <div className="flex flex-col items-center gap-2">
         <h1 className="text-heading font-inter text-4xl">Elevsøk</h1>
         <div className="relative flex w-[calc(100vw-2rem)] max-w-150 items-center">
