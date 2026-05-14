@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import studentsData from '../assets/output.json'
 import StudentForm from '../components/StudentForm'
+import StudentDetails from '../components/StudentDetails'
 import AscIcon from '../assets/icons/asc.svg?react'
 import DescIcon from '../assets/icons/desc.svg?react'
 import Add from '../assets/icons/add.svg?react'
@@ -20,6 +21,7 @@ type SortField = 'first_name' | 'last_name' | 'address' | 'city'
 
 function StudentSearchPage() {
   const [students, setStudents] = useState<Student[]>([])
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null)
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedSortField, setSelectedSortField] =
@@ -54,7 +56,8 @@ function StudentSearchPage() {
     setSelectedSortField(field)
   }
   const handleStudentClick = (student: Student) => {
-    console.log('Clicked student:', student.id)
+    setSelectedStudent(student)
+    setShowStudentDetails(true)
   }
   const handleAddStudent = (student: Student) => {
     const newStudent = { ...student, id: (students.length + 1).toString() }
@@ -107,7 +110,7 @@ function StudentSearchPage() {
   }
 
   return (
-    <div className="mx-auto mb-4 flex w-full max-w-150 flex-col gap-5">
+    <div className="mx-auto mb-4 flex w-full max-w-150 flex-col gap-5 md:max-w-200">
       <div className="flex flex-col items-center gap-2">
         <h1 className="text-heading font-inter text-4xl">Elevsøk</h1>
         <div className="relative flex w-[calc(100vw-2rem)] max-w-150 items-center">
@@ -121,7 +124,7 @@ function StudentSearchPage() {
           <Search className="absolute right-6 h-5 w-5 text-gray-500" />
         </div>
       </div>
-      <div className="flex flex-col gap-4 rounded-lg bg-white px-2 py-6 sm:px-6">
+      <div className="flex flex-col gap-4 rounded-3xl bg-white px-2 py-6 sm:rounded-lg sm:px-6">
         <button
           className="flex items-center self-end rounded-full border border-black bg-white px-3 py-2 text-sm font-medium text-black transition hover:cursor-pointer hover:bg-black hover:text-white"
           onClick={() => setShowForm(true)}
@@ -179,22 +182,36 @@ function StudentSearchPage() {
                 >
                   <div className="flex w-full justify-between border-y border-black py-4 text-start">
                     <div className="w-[20%]">
-                      <p className="text-sm sm:text-base">
+                      <p
+                        className="text-sm hyphens-auto sm:text-base"
+                        lang="no"
+                      >
                         {student.first_name}
                       </p>
                     </div>
                     <div className="w-[23%]">
-                      <p className="text-sm sm:text-base">
+                      <p
+                        className="text-sm hyphens-auto sm:text-base"
+                        lang="no"
+                      >
                         {student.last_name}
                       </p>
                     </div>
                     <div className="w-[30%]">
-                      <p className="text-sm capitalize sm:text-base">
+                      <p
+                        className="text-sm hyphens-auto capitalize sm:text-base"
+                        lang="no"
+                      >
                         {student.address}
                       </p>
                     </div>
                     <div className="w-[27%]">
-                      <p className="text-sm sm:text-base">{student.city}</p>
+                      <p
+                        className="text-sm hyphens-auto sm:text-base"
+                        lang="no"
+                      >
+                        {student.city}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -206,6 +223,12 @@ function StudentSearchPage() {
         <StudentForm
           onSubmitStudent={handleAddStudent}
           onClose={() => setShowForm(false)}
+        />
+      )}
+      {showStudentDetails && selectedStudent && (
+        <StudentDetails
+          student={selectedStudent}
+          onClose={() => setShowStudentDetails(false)}
         />
       )}
     </div>
