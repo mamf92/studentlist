@@ -224,8 +224,12 @@ function StudentSearchPage() {
                 const fieldA = a[selectedSortField]
                 const fieldB = b[selectedSortField]
                 return sortOrder === 'asc'
-                  ? fieldA.localeCompare(fieldB)
-                  : fieldB.localeCompare(fieldA)
+                  ? fieldA.localeCompare(fieldB, ['no', 'sv', 'da'], {
+                      sensitivity: 'base',
+                    })
+                  : fieldB.localeCompare(fieldA, ['no', 'sv', 'da'], {
+                      sensitivity: 'base',
+                    })
               })
               .map((student) => (
                 <div
@@ -236,7 +240,7 @@ function StudentSearchPage() {
                   <div className="flex w-full justify-between border-y border-black py-4 text-start">
                     <div className="w-[20%]">
                       <p
-                        className="text-sm hyphens-auto sm:text-base"
+                        className="text-sm hyphens-auto capitalize sm:text-base"
                         lang="no"
                       >
                         {student.first_name}
@@ -244,7 +248,7 @@ function StudentSearchPage() {
                     </div>
                     <div className="w-[23%]">
                       <p
-                        className="text-sm hyphens-auto sm:text-base"
+                        className="text-sm hyphens-auto capitalize sm:text-base"
                         lang="no"
                       >
                         {student.last_name}
@@ -260,7 +264,7 @@ function StudentSearchPage() {
                     </div>
                     <div className="w-[27%]">
                       <p
-                        className="text-sm hyphens-auto sm:text-base"
+                        className="text-sm hyphens-auto capitalize sm:text-base"
                         lang="no"
                       >
                         {student.city}
