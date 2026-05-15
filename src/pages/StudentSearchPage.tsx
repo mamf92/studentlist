@@ -150,14 +150,6 @@ function StudentSearchPage() {
     )
   }
 
-  if (students.length === 0) {
-    return (
-      <p className="p-6">
-        Det finnes ingen elever i databasen. Legg til en eller flere.
-      </p>
-    )
-  }
-
   return (
     <div className="mx-auto mb-4 flex w-full max-w-150 flex-col gap-5 md:max-w-200">
       <div className="absolute top-4 right-4">
@@ -222,9 +214,10 @@ function StudentSearchPage() {
         {students.length === 0 && (
           <p className="text-copy">Det finnes ingen elever i databasen.</p>
         )}
-        {filteredStudents.length === 0 ? (
+        {filteredStudents.length === 0 && searchTerm !== '' && (
           <p className="text-copy">Ingen elever matcher ditt søk.</p>
-        ) : (
+        )}
+        {filteredStudents.length > 0 && (
           <div className="bg-mutedbackground flex flex-col rounded-lg px-2 py-4">
             {filteredStudents
               .sort((a, b) => {

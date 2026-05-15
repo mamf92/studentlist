@@ -6,6 +6,13 @@ type StudentFormProps = {
   onClose: () => void
 }
 
+const NAME_PATTERN = "^[a-zA-ZÀ-ÿ\\-\\s'’]{2,}$"
+const PHONE_PATTERN = '^(0047|\\+47|47)?[2-9]\\d{7}$'
+const ADDRESS_PATTERN =
+  "^[a-zA-ZÀ-ÿ\\-\\s'’]{2,}\\s?[0-9]{1,4}\\s?[a-zA-ZÀ-ÿ\\-\\s'’]{0,1}$"
+const POSTAL_CODE_PATTERN = '^[0-9]{4,4}$'
+const CITY_PATTERN = "^[a-zA-ZÀ-ÿ\\-\\s'’]{1,}$"
+
 export default function StudentForm({
   student,
   onSubmitStudent,
@@ -48,6 +55,9 @@ export default function StudentForm({
                 className="font-sometype-mono text-copy w-full rounded-full border border-black bg-white px-4 py-2 placeholder:text-gray-500 focus:ring-1 focus:ring-black focus:outline-none"
                 placeholder="Fornavn"
                 defaultValue={student?.first_name || ''}
+                pattern={NAME_PATTERN}
+                title="Minimum 2 bokstaver og - eller ' tillatt"
+                required
               />
             </div>
             <div className="flex items-center border-y py-2">
@@ -64,6 +74,9 @@ export default function StudentForm({
                 className="font-sometype-mono text-copy w-full rounded-full border border-black bg-white px-4 py-2 placeholder:text-gray-500 focus:ring-1 focus:ring-black focus:outline-none"
                 placeholder="Etternavn"
                 defaultValue={student?.last_name || ''}
+                pattern={NAME_PATTERN}
+                title="Minimum 2 bokstaver og - eller ' tillatt"
+                required
               />
             </div>
             <div className="flex items-center border-y py-2">
@@ -78,8 +91,11 @@ export default function StudentForm({
                 id="phone"
                 name="phone"
                 className="font-sometype-mono text-copy w-full rounded-full border border-black bg-white px-4 py-2 placeholder:text-gray-500 focus:ring-1 focus:ring-black focus:outline-none"
-                placeholder="Telefonnummer"
+                placeholder="+47924....."
+                pattern={PHONE_PATTERN}
                 defaultValue={student?.phone || ''}
+                required
+                title="Norsk telefonnummer uten mellomrom med eller uten +47 eller 0047 foran"
               />
             </div>
             <div className="flex items-center border-y py-2">
@@ -97,6 +113,9 @@ export default function StudentForm({
                 className="font-sometype-mono text-copy w-full rounded-full border border-black bg-white px-4 py-2 placeholder:text-gray-500 focus:ring-1 focus:ring-black focus:outline-none"
                 placeholder="Adresse"
                 defaultValue={student?.address || ''}
+                pattern={ADDRESS_PATTERN}
+                required
+                title="Gatenavn og nummer må inneholde minst 3 bokstaver "
               />
             </div>
             <div className="flex items-center border-y py-2">
@@ -113,6 +132,9 @@ export default function StudentForm({
                 className="font-sometype-mono text-copy w-full rounded-full border border-black bg-white px-4 py-2 placeholder:text-gray-500 focus:ring-1 focus:ring-black focus:outline-none"
                 placeholder="Postnummer"
                 defaultValue={student?.postal_code || ''}
+                pattern={POSTAL_CODE_PATTERN}
+                required
+                title="Postnummeret må være på 4 siffer"
               />
             </div>
             <div className="flex items-center border-t py-2">
@@ -129,6 +151,9 @@ export default function StudentForm({
                 className="font-sometype-mono text-copy w-full rounded-full border border-black bg-white px-4 py-2 placeholder:text-gray-500 focus:ring-1 focus:ring-black focus:outline-none"
                 placeholder="Sted"
                 defaultValue={student?.city || ''}
+                required
+                pattern={CITY_PATTERN}
+                title="Stedet må inneholde minst 2 bokstaver"
               />
             </div>
           </div>
